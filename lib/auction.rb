@@ -32,4 +32,32 @@ class Auction
     total
   end
 
+  def get_bidder_list
+    all_bidders = []
+    @items.each do |item|
+      item.bids.keys.each do |bidder|
+        all_bidders << bidder
+      end
+    end
+    all_bidders.uniq
+  end
+
+  def bidders
+    get_bidder_list.map do |bidder|
+      bidder.name
+    end
+  end
+
+  def bidder_info
+    info_all = {}
+    get_bidder_list.each do |bidder|
+      list = @items.find_all do |item|
+        item.bids.include?(bidder)
+      end
+      info_all[bidder] = {:budget => bidder.budget,
+                          :items => list
+                          }
+    end
+    info_all
+  end
 end
